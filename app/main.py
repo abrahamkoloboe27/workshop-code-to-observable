@@ -11,7 +11,7 @@ from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 from app.config import get_settings
 from app.db import create_pool
 from app.metrics import REQUEST_DURATION
-from app.routers import health, items, orders
+from app.routers import health, items
 
 
 @asynccontextmanager
@@ -50,7 +50,6 @@ def create_app() -> FastAPI:
 
     app.include_router(health.router)
     app.include_router(items.router)
-    app.include_router(orders.router)
     return app
 
 
