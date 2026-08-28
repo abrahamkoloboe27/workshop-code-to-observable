@@ -1,5 +1,6 @@
 """FastAPI application factory."""
 
+import json
 import time
 from contextlib import asynccontextmanager
 
