@@ -1,0 +1,21 @@
+groups:
+  - name: workshop
+    interval: 10s
+    rules:
+      - alert: AppTargetDown
+        expr: up{job="workshop-app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "L'application n'est plus scrapee"
+          description: "Prometheus n'obtient plus de reponse de {{ $labels.instance }} depuis 1 minute."
+
+      - alert: OrdersTrafficStalled
+        expr: sum(rate(orders_requests_total[5m])) == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Plus aucun trafic sur /orders"
+          description: "Aucune requete servie sur /orders depuis 5 minutes — panne applicative, ou trafic reellement nul ?"
