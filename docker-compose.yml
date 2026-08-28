@@ -10,16 +10,6 @@ services:
     volumes:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      # -h 127.0.0.1 : on interroge le TCP, pas la socket Unix. Pendant le chargement
-      # de db/init.sql, Postgres tourne avec listen_addresses='' — la socket repond
-      # deja alors que le reseau n'ecoute pas encore.
-      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U ${POSTGRES_USER:-workshop} -d ${POSTGRES_DB:-workshop}"]
-      interval: 2s
-      timeout: 3s
-      retries: 30
-      start_period: 30s
-      start_interval: 1s
 
   app:
     build: .
@@ -29,8 +19,7 @@ services:
     ports:
       - "${APP_PORT:-8000}:8000"
     depends_on:
-      db:
-        condition: service_healthy
+      - db
 
   prometheus:
     image: prom/prometheus:v3.13.0
